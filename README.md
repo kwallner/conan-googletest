@@ -1,11 +1,18 @@
-[![Build Status](https://travis-ci.org/lasote/conan-gtest.svg)](https://travis-ci.org/lasote/conan-gtest)
+[![Build Status](https://travis-ci.org/kwallner/conan-gtest.svg)](https://travis-ci.org/kwallner/conan-gtest)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/kwallner/conan-gtest?svg=true&branch=release/1.8.0)](https://ci.appveyor.com/project/kwallner/conan-gtest) 
+[![Travis Build Status](https://api.travis-ci.org/kwallner/conan-boost.svg?branch=release/1.8.0)](https://travis-ci.org/kwallner/conan-boost)
 
+# Info
+
+This repository is forked from https://github.com/lasote/conan-gtest. 
+
+It is mainly for testing and evaluation purposes. If you need a tested and maintained release please switch to https://github.com/lasote/conan-gtest. 
 
 # conan-gtest
 
 [Conan.io](https://conan.io) package for Google test library
 
-The packages generated with this **conanfile** can be found in [conan.io](https://conan.io/source/gtest/1.8.0/lasote/stable).
+The packages generated with this **conanfile** can be found in [conan.io](https://conan.io/source/gtest/1.8.0/kwallner/stable).
 
 ## Build packages
 
@@ -15,20 +22,20 @@ Download conan client from [Conan.io](https://conan.io) and run:
 
 ## Upload packages to server
 
-    $ conan upload gtest/1.8.0@lasote/stable --all
+    $ conan upload gtest/1.8.0@kwallner/stable --all
 
 ## Reuse the packages
 
 ### Basic setup
 
-    $ conan install gtest/1.8.0@lasote/stable
+    $ conan install gtest/1.8.0@kwallner/stable
 
 ### Project setup
 
 If you handle multiple dependencies in your project, it would be better to add a *conanfile.txt*
 
     [requires]
-    gtest/1.8.0@lasote/stable
+    gtest/1.8.0@kwallner/stable
 
     [options]
     gtest:shared=False

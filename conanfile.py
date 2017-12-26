@@ -15,7 +15,7 @@ class GTestConan(ConanFile):
     default_options = ("shared=True", "include_pdbs=False", "cygwin_msvc=False",
                        "no_gmock=False", "no_main=False", "fpic=False")
     exports_sources = "CMakeLists.txt"
-    url = "http://github.com/lasote/conan-gtest"
+    url = "http://github.com/kwallner/conan-gtest"
     license = "https://github.com/google/googletest/blob/master/googletest/LICENSE"
     description = "Google's C++ test framework"
 
