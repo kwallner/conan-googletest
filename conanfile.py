@@ -29,7 +29,7 @@ class GTestConan(ConanFile):
     def source(self):
         zip_name = "release-%s.zip" % self.version
         url = "https://github.com/google/googletest/archive/%s" % zip_name
-        tools.download(url, zip_name)
+        tools.download(url, zip_name, verify=False)
         tools.unzip(zip_name)
         os.unlink(zip_name)
 
