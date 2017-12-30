@@ -14,7 +14,7 @@ class GTestConan(ConanFile):
                "no_gmock": [True, False], "no_main": [True, False], "fpic": [True, False]}
     default_options = ("shared=True", "include_pdbs=False", "cygwin_msvc=False",
                        "no_gmock=False", "no_main=False", "fpic=False")
-    exports_sources = "CMakeLists.txt"
+    exports_sources = [ "CMakeLists.txt", "patches/googletest-1.8.0_mingw32.patch" ]
     url = "http://github.com/kwallner/conan-gtest"
     license = "https://github.com/google/googletest/blob/master/googletest/LICENSE"
     description = "Google's C++ test framework"
@@ -32,7 +32,8 @@ class GTestConan(ConanFile):
         tools.download(url, zip_name, verify=False)
         tools.unzip(zip_name)
         os.unlink(zip_name)
-
+        tools.patch(patch_file="patches/googletest-1.8.0_mingw32.patch")
+        
     def build(self):
         files.mkdir("_build")
         with tools.chdir("_build"):
