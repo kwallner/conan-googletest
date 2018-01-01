@@ -12,7 +12,7 @@ It is mainly for testing and evaluation purposes. If you need a tested and maint
 
 [Conan.io](https://conan.io) package for Google test library
 
-The packages generated with this **conanfile** can be found in [conan.io](https://conan.io/source/gtest/1.8.0/kwallner/testing).
+The packages generated with this **conanfile** can be found in [conan.io](https://conan.io/source/gtest/1.8.0/kwallner/stable).
 
 ## Build packages
 
@@ -22,20 +22,20 @@ Download conan client from [Conan.io](https://conan.io) and run:
 
 ## Upload packages to server
 
-    $ conan upload gtest/1.8.0@kwallner/testing --all
+    $ conan upload gtest/1.8.0@kwallner/stable --all
 
 ## Reuse the packages
 
 ### Basic setup
 
-    $ conan install gtest/1.8.0@kwallner/testing
+    $ conan install gtest/1.8.0@kwallner/stable
 
 ### Project setup
 
 If you handle multiple dependencies in your project, it would be better to add a *conanfile.txt*
 
     [requires]
-    gtest/1.8.0@kwallner/testing
+    gtest/1.8.0@kwallner/stable
 
     [options]
     gtest:shared=False
