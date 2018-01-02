@@ -17,9 +17,11 @@ class DefaultNameConan(ConanFile):
         cmake.build()
 
     def imports(self):
-        self.copy(pattern="*.dll", dst="bin", src="bin")
-        self.copy(pattern="*.dylib", dst="bin", src="lib")
+        self.copy("*.dll", dst="bin", src="bin")
+        self.copy("*.dylib", dst="bin", src="lib")
+        self.copy('*.so*', dst='bin', src='lib')
         
     def test(self):
-        self.run("cd bin && .%smytest" % os.sep)
+        os.chdir("bin")
+        self.run(".%smytest" % os.sep)
         assert os.path.exists(os.path.join(self.deps_cpp_info["gtest"].rootpath, "LICENSE"))
