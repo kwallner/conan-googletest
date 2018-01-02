@@ -11,9 +11,9 @@ class GTestConan(ConanFile):
     generators = "cmake"
     settings = "os", "arch", "compiler", "build_type"
     options = {"shared": [True, False], "include_pdbs": [True, False], "cygwin_msvc": [True, False],
-               "no_gmock": [True, False], "no_main": [True, False], "fpic": [True, False]}
+               "no_gmock": [True, False], "no_main": [True, False], "fPIC": [True, False]}
     default_options = ("shared=True", "include_pdbs=False", "cygwin_msvc=False",
-                       "no_gmock=False", "no_main=False", "fpic=False")
+                       "no_gmock=False", "no_main=False", "fPIC=False")
     exports_sources = [ "CMakeLists.txt", "patches/googletest-1.8.0_mingw32.patch" ]
     url = "http://github.com/kwallner/conan-gtest"
     license = "https://github.com/google/googletest/blob/master/googletest/LICENSE"
@@ -42,7 +42,7 @@ class GTestConan(ConanFile):
                 cmake.definitions["gtest_force_shared_crt"] = "ON"
             if self.options.shared:
                 cmake.definitions["BUILD_SHARED_LIBS"] = "1"
-            if self.options.fpic:
+            if self.options.fPIC:
                 cmake.definitions["CMAKE_POSITION_INDEPENDENT_CODE"] = "ON"
 
             cmake.definitions["BUILD_GTEST"] = "ON" if self.options.no_gmock else "OFF"
