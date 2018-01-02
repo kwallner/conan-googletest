@@ -16,6 +16,12 @@ class GTestConan(ConanFile):
     license = 'BSD 3-clause "New" or "Revised" License'
     description = "Google's C++ test framework"
 
+    def config(self):
+        # There seems to be a bug when using a shared version, see:
+        # https://groups.google.com/forum/#!msg/googletestframework/LGVrYGnKlHM/UD6KnOhTJ08J
+        if self.settings.os == "Linux":
+            self.options.shared=False
+    
     def source(self):
         self.run("git clone git@github.com:google/googletest.git")
         self.run("cd googletest && git checkout %s" % self.branch)
@@ -39,6 +45,11 @@ class GTestConan(ConanFile):
 
     def package_info(self):
         debug_postfix= "d" if self.settings.build_type == "Debug" else ""
+        
+        # Workround: No debug postfix here
+        if self.settings.os == "Linux" and self.branch == "release-1.8.0":
+            debug_postfix = ""
+                
         self.cpp_info.libs = [
             "gmock" + debug_postfix, 
             "gmock_main" + debug_postfix, 
