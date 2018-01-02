@@ -38,7 +38,13 @@ class GTestConan(ConanFile):
         self.copy("README.md", src="googletest", dst=".", keep_path=False)
 
     def package_info(self):
-        self.cpp_info.libs = ["gmock", "gmock_main", "gtest", "gtest_main"]
+        debug_postfix= "d" if self.settings.build_type == "Debug" else ""
+        self.cpp_info.libs = [
+            "gmock" + debug_postfix, 
+            "gmock_main" + debug_postfix, 
+            "gtest" + debug_postfix, 
+            "gtest_main" + debug_postfix
+            ]
 
         if self.settings.os == "Linux":
             self.cpp_info.libs.append("pthread")
