@@ -8,8 +8,9 @@ class DefaultNameConan(ConanFile):
     version = "0.1"
     settings = "os", "compiler", "arch", "build_type"
     generators = "cmake"
-    requires = "gtest/1.8.0@lasote/stable"
-        
+    options = {"shared": [True, False]}
+    default_options = "shared=False"
+    
     def build(self):
         cmake = CMake(self)
         cmake.configure()
