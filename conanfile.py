@@ -25,8 +25,8 @@ class GTestConan(ConanFile):
         if self.settings.compiler == "Visual Studio" and "MD" in str(self.settings.compiler.runtime):
             cmake.definitions["gtest_force_shared_crt"] = "ON"
         
-        cmake.definitions["BUILD_SHARED_LIBS"] = self.options.shared
-        cmake.definitions["CMAKE_POSITION_INDEPENDENT_CODE"] = self.options.fPIC or self.options.shared
+        cmake.definitions["BUILD_SHARED_LIBS"] = "ON" if self.options.shared else "OFF"
+        cmake.definitions["CMAKE_POSITION_INDEPENDENT_CODE"] = "ON" if self.options.fPIC or self.options.shared else "OFF"
 
         cmake.configure(source_dir="%s/googletest" % self.source_folder)
         cmake.build()
