@@ -1,4 +1,5 @@
 import os
+from shutil import copyfile
 
 from conans import ConanFile, tools, CMake
 from conans.util import files
@@ -37,12 +38,25 @@ class GTestConan(ConanFile):
         cmake.configure(source_dir="%s/googletest" % self.source_folder)
         cmake.build()
         cmake.install()
-        
+               
     def package(self):
         # Copy the license files
         self.copy("LICENSE", src="googletest", dst=".", keep_path=False)
         self.copy("README.md", src="googletest", dst=".", keep_path=False)
 
+        if self.settings.build_type == "Debug":
+            # Hack to make FindGTest work: Find only works if release binaries are present
+            if self.settings.os == "Windows" and self.settings.compiler == "Visual Studio":
+                copyfile("%s/lib/gmockd.lib" % self.package_folder, "%s/lib/gmock.lib" % self.package_folder)
+                copyfile("%s/lib/gmock_maind.lib" % self.package_folder, "%s/lib/gmock_main.lib" % self.package_folder)
+                copyfile("%s/lib/gtestd.lib" % self.package_folder, "%s/lib/gtest.lib" % self.package_folder)
+                copyfile("%s/lib/gtest_maind.lib" % self.package_folder, "%s/lib/gtest_main.lib" % self.package_folder)
+                if self.options.shared:
+                    copyfile("%s/bin/gmockd.dll" % self.package_folder, "%s/bin/gmock.dll" % self.package_folder)
+                    copyfile("%s/bin/gmock_maind.dll" % self.package_folder, "%s/bin/gmock_main.dll" % self.package_folder)
+                    copyfile("%s/bin/gtestd.dll" % self.package_folder, "%s/bin/gtest.dll" % self.package_folder)
+                    copyfile("%s/bin/gtest_maind.dll" % self.package_folder, "%s/bin/gtest_main.dll" % self.package_folder)
+        
     def package_info(self):
         debug_postfix= "d" if self.settings.build_type == "Debug" else ""
         
@@ -56,7 +70,7 @@ class GTestConan(ConanFile):
             "gtest" + debug_postfix, 
             "gtest_main" + debug_postfix
             ]
-
+            
         if self.settings.os == "Linux":
             self.cpp_info.libs.append("pthread")
 
