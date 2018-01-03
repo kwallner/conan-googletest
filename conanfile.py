@@ -35,6 +35,9 @@ class GTestConan(ConanFile):
         cmake.definitions["BUILD_SHARED_LIBS"] = "ON" if self.options.shared else "OFF"
         cmake.definitions["CMAKE_POSITION_INDEPENDENT_CODE"] = "ON" if self.options.fPIC or self.options.shared else "OFF"
 
+        # No debug postfix
+        cmake.definitions["CMAKE_DEBUG_POSTFIX"] = ""
+        
         cmake.configure(source_dir="%s/googletest" % self.source_folder)
         cmake.build()
         cmake.install()
@@ -44,31 +47,12 @@ class GTestConan(ConanFile):
         self.copy("LICENSE", src="googletest", dst=".", keep_path=False)
         self.copy("README.md", src="googletest", dst=".", keep_path=False)
 
-        if self.settings.build_type == "Debug":
-            # Hack to make FindGTest work: Find only works if release binaries are present
-            if self.settings.os == "Windows" and self.settings.compiler == "Visual Studio":
-                copyfile("%s/lib/gmockd.lib" % self.package_folder, "%s/lib/gmock.lib" % self.package_folder)
-                copyfile("%s/lib/gmock_maind.lib" % self.package_folder, "%s/lib/gmock_main.lib" % self.package_folder)
-                copyfile("%s/lib/gtestd.lib" % self.package_folder, "%s/lib/gtest.lib" % self.package_folder)
-                copyfile("%s/lib/gtest_maind.lib" % self.package_folder, "%s/lib/gtest_main.lib" % self.package_folder)
-                if self.options.shared:
-                    copyfile("%s/bin/gmockd.dll" % self.package_folder, "%s/bin/gmock.dll" % self.package_folder)
-                    copyfile("%s/bin/gmock_maind.dll" % self.package_folder, "%s/bin/gmock_main.dll" % self.package_folder)
-                    copyfile("%s/bin/gtestd.dll" % self.package_folder, "%s/bin/gtest.dll" % self.package_folder)
-                    copyfile("%s/bin/gtest_maind.dll" % self.package_folder, "%s/bin/gtest_main.dll" % self.package_folder)
-        
     def package_info(self):
-        debug_postfix= "d" if self.settings.build_type == "Debug" else ""
-        
-        # Workround: No debug postfix here
-        if self.settings.os == "Linux" and self.branch == "release-1.8.0":
-            debug_postfix = ""
-                
         self.cpp_info.libs = [
-            "gmock" + debug_postfix, 
-            "gmock_main" + debug_postfix, 
-            "gtest" + debug_postfix, 
-            "gtest_main" + debug_postfix
+            "gmock",
+            "gmock_main", 
+            "gtest", 
+            "gtest_main"
             ]
             
         if self.settings.os == "Linux":
