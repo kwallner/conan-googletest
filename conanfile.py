@@ -63,3 +63,5 @@ class GTestConan(ConanFile):
 
         if float(str(self.settings.compiler.version)) >= 15 and self.settings.compiler == "Visual Studio":
             self.cpp_info.defines.append("GTEST_LANG_CXX11=1")
+
+        self.env_info.GTEST_ROOT = self.package_folder
