@@ -27,13 +27,21 @@ class GTestConan(ConanFile):
         self.run("git clone git@github.com:google/googletest.git")
         self.run("cd googletest && git checkout %s" % self.branch)
         
+        # No debug postfix
+        tools.replace_in_file("googletest/googletest/cmake/internal_utils.cmake",
+            'DEBUG_POSTFIX "d"', 'DEBUG_POSTFIX ""')
+        
     def build(self):
         cmake = CMake(self)
         if self.settings.compiler == "Visual Studio" and "MD" in str(self.settings.compiler.runtime):
             cmake.definitions["gtest_force_shared_crt"] = "ON"
         
         cmake.definitions["BUILD_SHARED_LIBS"] = "ON" if self.options.shared else "OFF"
+        cmake.definitions["GTEST_CREATE_SHARED_LIBRARY"] = "ON" if self.options.shared else "OFF"
         cmake.definitions["CMAKE_POSITION_INDEPENDENT_CODE"] = "ON" if self.options.fPIC or self.options.shared else "OFF"
+
+        cmake.definitions["BUILD_GTEST"] = "ON" 
+        cmake.definitions["BUILD_GMOCK"] = "ON"
 
         # No debug postfix
         cmake.definitions["CMAKE_DEBUG_POSTFIX"] = ""
