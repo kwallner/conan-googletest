@@ -22,34 +22,34 @@ class GTestConan(ConanFile):
         # https://groups.google.com/forum/#!msg/googletestframework/LGVrYGnKlHM/UD6KnOhTJ08J
         if self.settings.os == "Linux":
             self.options.shared=False
-    
+
     def source(self):
         self.run("git clone git@github.com:google/googletest.git")
         self.run("cd googletest && git checkout %s" % self.branch)
-        
+
         # No debug postfix
         tools.replace_in_file("googletest/googletest/cmake/internal_utils.cmake",
             'DEBUG_POSTFIX "d"', 'DEBUG_POSTFIX ""')
-        
+
     def build(self):
         cmake = CMake(self)
         if self.settings.compiler == "Visual Studio" and "MD" in str(self.settings.compiler.runtime):
             cmake.definitions["gtest_force_shared_crt"] = "ON"
-        
+
         cmake.definitions["BUILD_SHARED_LIBS"] = "ON" if self.options.shared else "OFF"
         cmake.definitions["GTEST_CREATE_SHARED_LIBRARY"] = "ON" if self.options.shared else "OFF"
         cmake.definitions["CMAKE_POSITION_INDEPENDENT_CODE"] = "ON" if self.options.fPIC or self.options.shared else "OFF"
 
-        cmake.definitions["BUILD_GTEST"] = "ON" 
+        cmake.definitions["BUILD_GTEST"] = "ON"
         cmake.definitions["BUILD_GMOCK"] = "ON"
 
         # No debug postfix
         cmake.definitions["CMAKE_DEBUG_POSTFIX"] = ""
-        
+
         cmake.configure(source_dir="%s/googletest" % self.source_folder)
         cmake.build()
         cmake.install()
-               
+
     def package(self):
         # Copy the license files
         self.copy("LICENSE", src="googletest", dst=".", keep_path=False)
@@ -57,12 +57,12 @@ class GTestConan(ConanFile):
 
     def package_info(self):
         self.cpp_info.libs = [
+            "gmock_main",
             "gmock",
-            "gmock_main", 
-            "gtest", 
-            "gtest_main"
+            "gtest_main",
+            "gtest",
             ]
-            
+
         if self.settings.os == "Linux":
             self.cpp_info.libs.append("pthread")
 
