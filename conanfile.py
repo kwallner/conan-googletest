@@ -55,8 +55,8 @@ class GTestConan(ConanFile):
                
     def package(self):
         # Copy the license files
-        self.copy("LICENSE", src="googletest", dst=".", keep_path=False)
-        self.copy("README.md", src="googletest", dst=".", keep_path=False)
+        self.copy("LICENSE", dst=".", keep_path=False)
+        self.copy("README.md", dst=".", keep_path=False)
 
     def package_info(self):
         self.cpp_info.libs = [
