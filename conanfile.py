@@ -7,6 +7,7 @@ from conans.util import files
 class GTestConan(ConanFile):
     name = "gtest"
     version = "1.8.0"
+    scm = { "type": "git", "url": "https://github.com/google/googletest.git", "revision": "master" }
     #branch = "release-" + version
     branch = "master"
     generators = "cmake"
@@ -29,11 +30,8 @@ class GTestConan(ConanFile):
             self.options.shared=False
     
     def source(self):
-        self.run("git clone git@github.com:google/googletest.git")
-        self.run("cd googletest && git checkout %s" % self.branch)
-        
         # No debug postfix
-        tools.replace_in_file("googletest/googletest/cmake/internal_utils.cmake",
+        tools.replace_in_file("googletest/cmake/internal_utils.cmake",
             'DEBUG_POSTFIX "d"', 'DEBUG_POSTFIX ""')
         
     def build(self):
@@ -51,7 +49,7 @@ class GTestConan(ConanFile):
         # No debug postfix
         cmake.definitions["CMAKE_DEBUG_POSTFIX"] = ""
         
-        cmake.configure(source_dir="%s/googletest" % self.source_folder)
+        cmake.configure()
         cmake.build()
         cmake.install()
                
