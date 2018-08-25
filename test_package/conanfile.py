@@ -11,6 +11,10 @@ class DefaultNameConan(ConanFile):
     options = {"shared": [True, False]}
     default_options = "shared=False"
     
+    def configure(self):
+        if self.settings.compiler == "Visual Studio" and self.settings.compiler.runtime == "MT" and self.settings.build_type == "Debug":
+            self.settings.compiler.runtime = "MTd"
+
     def build(self):
         cmake = CMake(self)
         cmake.configure()

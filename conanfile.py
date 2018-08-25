@@ -17,6 +17,11 @@ class GTestConan(ConanFile):
     license = 'BSD 3-clause "New" or "Revised" License'
     description = "Google's C++ test framework"
 
+     
+    def configure(self):
+        if self.settings.compiler == "Visual Studio" and self.settings.compiler.runtime == "MT" and self.settings.build_type == "Debug":
+            self.settings.compiler.runtime = "MTd"
+
     def config(self):
         # There seems to be a bug when using a shared version, see:
         # https://groups.google.com/forum/#!msg/googletestframework/LGVrYGnKlHM/UD6KnOhTJ08J
