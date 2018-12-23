@@ -6,8 +6,8 @@ from conans.util import files
 
 class GTestConan(ConanFile):
     name = "gtest"
-    version = "1.8.0"
-    scm = { "type": "git", "url": "https://github.com/google/googletest.git", "revision": "master" }
+    version = "1.8.1"
+    scm = { "type": "git", "url": "https://github.com/google/googletest.git", "revision": "release-1.8.1" }
     #branch = "release-" + version
     branch = "master"
     generators = "cmake"
@@ -29,6 +29,8 @@ class GTestConan(ConanFile):
             self.options.shared=False
 
     def source(self):
+        #url = "https://codeload.github.com/google/googletest/tar.gz/release-%s" % (self.version)
+        #tools.get(url, sha256=sha256)
         # No debug postfix
         tools.replace_in_file("googletest/cmake/internal_utils.cmake",
             'DEBUG_POSTFIX "d"', 'DEBUG_POSTFIX ""')
