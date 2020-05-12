@@ -7,16 +7,15 @@ from conans.util import files
 class GTestConan(ConanFile):
     name = "gtest"
     version = "1.8.1"
-    scm = { "type": "git", "url": "https://github.com/google/googletest.git", "revision": "release-1.8.1" }
-    #branch = "release-" + version
-    branch = "master"
+    _sha256_checksum = "9bf1fe5182a604b4135edc1a425ae356c9ad15e9b23f9f12a02e80184c3a249c"
     generators = "cmake"
     settings = "os", "arch", "compiler", "build_type"
     options = {"shared": [True, False], "fPIC": [True, False]}
-    default_options = ("shared=False", "fPIC=True")
+    default_options = { "shared" : False, "fPIC" : True }
     url = "http://github.com/kwallner/conan-gtest"
     license = 'BSD 3-clause "New" or "Revised" License'
     description = "Google's C++ test framework"
+    exports_sources = "packages/*"
      
     def configure(self):
         if self.settings.compiler == "Visual Studio" and self.settings.compiler.runtime == "MT" and self.settings.build_type == "Debug":
@@ -29,12 +28,16 @@ class GTestConan(ConanFile):
             self.options.shared=False
 
     def source(self):
-        #url = "https://codeload.github.com/google/googletest/tar.gz/release-%s" % (self.version)
-        #tools.get(url, sha256=sha256)
+        # Unpack and rename
+        tools.download(f'https://github.com/google/googletest/archive/release-{self.version}.tar.gz', f'googletest-release-{self.version}.tar.gz' , sha256=self._sha256_checksum)
+        tools.unzip(f'googletest-release-{self.version}.tar.gz')
+        os.rename(f'googletest-release-{self.version}', self.name)
+        os.remove(f'googletest-release-{self.version}')
         # No debug postfix
-        tools.replace_in_file("googletest/cmake/internal_utils.cmake",
-            'DEBUG_POSTFIX "d"', 'DEBUG_POSTFIX ""')
-
+        tools.replace_in_file("gtest/googletest/cmake/internal_utils.cmake", 'DEBUG_POSTFIX "d"', 'DEBUG_POSTFIX ""')
+        # Do not treat warnings as errors
+        tools.replace_in_file("gtest/googletest/cmake/internal_utils.cmake", ' -WX ', ' ')
+        
     def build(self):
         cmake = CMake(self)
         if self.settings.compiler == "Visual Studio" and "MD" in str(self.settings.compiler.runtime):
@@ -50,13 +53,13 @@ class GTestConan(ConanFile):
         # No debug postfix
         cmake.definitions["CMAKE_DEBUG_POSTFIX"] = ""
         
-        cmake.configure()
+        cmake.configure(source_dir="%s/%s" % (self.source_folder, self.name))
         cmake.build()
         cmake.install()
 
     def package(self):
         # Copy the license files
-        self.copy("LICENSE", dst=".", keep_path=False)
+        self.copy("LICENSE", src=self.name, dst=".", keep_path=False)
         self.copy("README.md", dst=".", keep_path=False)
 
     def package_info(self):
