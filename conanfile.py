@@ -4,7 +4,7 @@ from shutil import copyfile
 from conans import ConanFile, tools, CMake
 from conans.util import files
 
-class GTestConan(ConanFile):
+class ConanProject(ConanFile):
     name = "gtest"
     version = "1.8.1"
     _sha256_checksum = "9bf1fe5182a604b4135edc1a425ae356c9ad15e9b23f9f12a02e80184c3a249c"
@@ -15,7 +15,7 @@ class GTestConan(ConanFile):
     url = "http://github.com/kwallner/conan-gtest"
     license = 'BSD 3-clause "New" or "Revised" License'
     description = "Google's C++ test framework"
-    exports_sources = "packages/*"
+    no_copy_source = True
      
     def configure(self):
         if self.settings.compiler == "Visual Studio" and self.settings.compiler.runtime == "MT" and self.settings.build_type == "Debug":
@@ -31,12 +31,12 @@ class GTestConan(ConanFile):
         # Unpack and rename
         tools.download(f'https://github.com/google/googletest/archive/release-{self.version}.tar.gz', f'googletest-release-{self.version}.tar.gz' , sha256=self._sha256_checksum)
         tools.unzip(f'googletest-release-{self.version}.tar.gz')
-        os.rename(f'googletest-release-{self.version}', self.name)
-        os.remove(f'googletest-release-{self.version}')
+        os.remove(f'googletest-release-{self.version}.tar.gz')
+        os.rename(f'googletest-release-{self.version}', f'{self.name}')
         # No debug postfix
-        tools.replace_in_file("gtest/googletest/cmake/internal_utils.cmake", 'DEBUG_POSTFIX "d"', 'DEBUG_POSTFIX ""')
+        tools.replace_in_file(f'{self.name}/googletest/cmake/internal_utils.cmake', 'DEBUG_POSTFIX "d"', 'DEBUG_POSTFIX ""')
         # Do not treat warnings as errors
-        tools.replace_in_file("gtest/googletest/cmake/internal_utils.cmake", ' -WX ', ' ')
+        tools.replace_in_file(f'{self.name}/googletest/cmake/internal_utils.cmake', ' -WX ', ' ')
         
     def build(self):
         cmake = CMake(self)
@@ -69,14 +69,11 @@ class GTestConan(ConanFile):
             "gtest_main",
             "gtest",
             ]
-
         if self.settings.os == "Linux":
             self.cpp_info.libs.append("pthread")
-
+        
         if self.options.shared:
             self.cpp_info.defines.append("GTEST_LINKED_AS_SHARED_LIBRARY=1")
-
+        
         if float(str(self.settings.compiler.version)) >= 15 and self.settings.compiler == "Visual Studio":
             self.cpp_info.defines.append("GTEST_LANG_CXX11=1")
-
-        self.env_info.GTEST_ROOT = self.package_folder
