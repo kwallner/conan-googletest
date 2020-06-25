@@ -1,8 +1,5 @@
 import os
-from shutil import copyfile
-
 from conans import ConanFile, tools, CMake
-from conans.util import files
 
 class ConanProject(ConanFile):
     name = "googletest"
@@ -15,7 +12,7 @@ class ConanProject(ConanFile):
     url = "http://github.com/kwallner/conan-gtest"
     license = 'BSD 3-clause "New" or "Revised" License'
     description = "Google's C++ test framework"
-    exports_sources = "packages/*"
+    no_copy_source = True
      
     def configure(self):
         if self.settings.compiler == "Visual Studio" and self.settings.compiler.runtime == "MT" and self.settings.build_type == "Debug":
@@ -25,8 +22,9 @@ class ConanProject(ConanFile):
         # Unpack and rename
         tools.download("https://github.com/google/googletest/archive/release-%s.tar.gz" % self.version, "googletest-release-%s.tar.gz" % self.version, sha256=self._sha256_checksum)
         tools.unzip("googletest-release-%s.tar.gz" % self.version)
+        os.remove("googletest-release-%s.tar.gz" % self.version)
         tools.replace_in_file("googletest-release-%s/googletest/cmake/internal_utils.cmake" % self.version, 'DEBUG_POSTFIX "d"', 'DEBUG_POSTFIX ""')
-                
+                    
     def build(self):
         cmake = CMake(self)
         if self.settings.compiler == "Visual Studio" and "MD" in str(self.settings.compiler.runtime):
@@ -54,7 +52,7 @@ class ConanProject(ConanFile):
 
     def package(self):
         # Copy the license files
-        self.copy("LICENSE", dst=".", keep_path=False)
+        self.copy("LICENSE", src="googletest-release-%s" % self.version, dst=".", keep_path=False)
         self.copy("README.md", dst=".", keep_path=False)
 
     def package_info(self):

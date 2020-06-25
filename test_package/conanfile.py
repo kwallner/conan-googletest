@@ -28,4 +28,4 @@ class DefaultNameConan(ConanFile):
     def test(self):
         os.chdir("bin")
         self.run(".%smytest" % os.sep)
-        assert os.path.exists(os.path.join(self.deps_cpp_info["gtest"].rootpath, "LICENSE"))
+        assert os.path.exists(os.path.join(self.deps_cpp_info["googletest"].rootpath, "LICENSE"))
