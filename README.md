@@ -1,7 +1,3 @@
-[![Build Status](https://travis-ci.org/kwallner/conan-gtest.svg)](https://travis-ci.org/kwallner/conan-gtest)
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/kwallner/conan-gtest?svg=true&branch=release/1.8.0)](https://ci.appveyor.com/project/kwallner/conan-gtest) 
-[![Travis Build Status](https://api.travis-ci.org/kwallner/conan-boost.svg?branch=release/1.8.0)](https://travis-ci.org/kwallner/conan-boost)
-
 # Info
 
 This repository is forked from https://github.com/lasote/conan-gtest. 
@@ -18,24 +14,24 @@ The packages generated with this **conanfile** can be found in [conan.io](https:
 
 Download conan client from [Conan.io](https://conan.io) and run:
 
-    $ python build.py
+    $ conan create . kwallner/stable
 
 ## Upload packages to server
 
-    $ conan upload gtest/1.8.1@kwallner/testing --all
+    $ conan upload gtest/1.8.1@kwallner/stable --all
 
 ## Reuse the packages
 
 ### Basic setup
 
-    $ conan install gtest/1.8.1@kwallner/testing
+    $ conan install gtest/1.8.1@kwallner/stable
 
 ### Project setup
 
 If you handle multiple dependencies in your project, it would be better to add a *conanfile.txt*
 
     [requires]
-    gtest/1.8.1@kwallner/testing
+    gtest/1.8.1@kwallner/stable
 
     [options]
 
