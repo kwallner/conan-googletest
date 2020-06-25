@@ -3,8 +3,8 @@ from conans import ConanFile, tools, CMake
 
 class ConanProject(ConanFile):
     name = "googletest"
-    version = "1.8.1"
-    _sha256_checksum = "9bf1fe5182a604b4135edc1a425ae356c9ad15e9b23f9f12a02e80184c3a249c"
+    version = "1.10.0"
+    _sha256_checksum = "9dc9157a9a1551ec7a7e43daea9a694a0bb5fb8bec81235d8a1e6ef64c716dcb"
     generators = "cmake"
     settings = "os", "arch", "compiler", "build_type"
     options = {"shared": [True, False], "fPIC": [True, False]}
