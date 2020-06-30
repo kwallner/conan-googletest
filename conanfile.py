@@ -66,10 +66,10 @@ class ConanProject(ConanFile):
         self.cpp_info.components["gmock_main"].requires = ["gmock"]
 
         if self.settings.os == "Linux":
-            self.cpp_info.components["gtest_main"].requires.append("pthread")
+            self.cpp_info.components["gtest"].system_libs.append("pthread")
         
         if self.options.shared:
-            self.cpp_info.components["gtest_main"].defines.append("GTEST_LINKED_AS_SHARED_LIBRARY=1")
+            self.cpp_info.components["gtest"].defines.append("GTEST_LINKED_AS_SHARED_LIBRARY=1")
 
         if float(str(self.settings.compiler.version)) >= 15 and self.settings.compiler == "Visual Studio":
-            self.cpp_info.components["gtest_main"].defines.append("GTEST_LANG_CXX11=1")
+            self.cpp_info.components["gtest"].defines.append("GTEST_LANG_CXX11=1")
