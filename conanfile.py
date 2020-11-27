@@ -2,7 +2,7 @@ import os
 from conans import ConanFile, tools, CMake
 
 class ConanProject(ConanFile):
-    name = "googletest"
+    name = "gtest"
     version = "1.10.0"
     _sha256_checksum = "9dc9157a9a1551ec7a7e43daea9a694a0bb5fb8bec81235d8a1e6ef64c716dcb"
     generators = "cmake"
@@ -57,19 +57,19 @@ class ConanProject(ConanFile):
 
     def package_info(self):
         self.cpp_info.name = "GTest"
-        self.cpp_info.components["gtest"].libs = ["gtest"] 
+        self.cpp_info.components["libgtest"].libs = ["gtest"] 
         self.cpp_info.components["gtest_main"].libs = ["gtest_main"]
-        self.cpp_info.components["gtest_main"].requires = ["gtest"]
+        self.cpp_info.components["gtest_main"].requires = ["libgtest"]
         self.cpp_info.components["gmock"].libs = ["gmock"] 
-        self.cpp_info.components["gmock"].requires = ["gtest"]
+        self.cpp_info.components["gmock"].requires = ["libgtest"]
         self.cpp_info.components["gmock_main"].libs = ["gmock_main"]
         self.cpp_info.components["gmock_main"].requires = ["gmock"]
 
         if self.settings.os == "Linux":
-            self.cpp_info.components["gtest"].system_libs.append("pthread")
+            self.cpp_info.components["libgtest"].system_libs.append("pthread")
         
         if self.options.shared:
-            self.cpp_info.components["gtest"].defines.append("GTEST_LINKED_AS_SHARED_LIBRARY=1")
+            self.cpp_info.components["libgtest"].defines.append("GTEST_LINKED_AS_SHARED_LIBRARY=1")
 
         if float(str(self.settings.compiler.version)) >= 15 and self.settings.compiler == "Visual Studio":
-            self.cpp_info.components["gtest"].defines.append("GTEST_LANG_CXX11=1")
+            self.cpp_info.components["libgtest"].defines.append("GTEST_LANG_CXX11=1")
